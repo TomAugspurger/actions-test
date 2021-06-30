@@ -2,7 +2,7 @@ name: Build Tag
 on:
   push:
     tags:
-      - *
+      - "*"
 
 jobs:
   matrix-build:
