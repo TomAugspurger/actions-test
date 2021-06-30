@@ -1,0 +1,34 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  matrix-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        # IMAGE: [python, r, gpu-pytorch]
+        IMAGE: [python]
+
+    name: ${{ matrix.IMAGE }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+
+    - name: Set the tags for docker
+      id: tags
+      run: |
+        tag=pcccr.azurecr.io/public/planetary-computer/${{ matrix.IMAGE }}:latest
+        GITHUB_TAG=${GITHUB_REF/refs\/tags\//}
+
+        if [ -n ${GITHUB_TAG} ]; then
+          tag="${tag},pcccr.azurecr.io/public/planetary-computer/${{ matrix.IMAGE }}:${GITHUB_TAG}"
+        fi;
+        echo "::set-output name=tag::${tag}"
