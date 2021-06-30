@@ -32,3 +32,7 @@ jobs:
           tag="${tag},pcccr.azurecr.io/public/planetary-computer/${{ matrix.IMAGE }}:${GITHUB_TAG}"
         fi;
         echo "::set-output name=tag::${tag}"
+
+    - name: test
+      run: |
+        echo "${{ steps.tags.outputs.tag }}"
