@@ -3,18 +3,11 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
 
 jobs:
-  matrix-build:
-    strategy:
-      fail-fast: false
-      matrix:
-        # IMAGE: [python, r, gpu-pytorch]
-        IMAGE: [python]
-
-    name: ${{ matrix.IMAGE }}
     runs-on: ubuntu-latest
-
     steps:
 
     - name: Checkout Repository
@@ -22,22 +15,18 @@ jobs:
       with:
         fetch-depth: 2
 
-    - name: Set the tags for docker
+    - name: Set environment
+      id: environment
+      run: |
+        echo ${{ github.event_name }}
+        if [[ ${{ github.event_name == "release" }} ]]; then
+          tag=prod
+        else
+          tag=staging
+        fi
+        echo "::set-output name=environment::${tag}"
+
+   - name: Set new variable value
       id: tags
       run: |
-        tag=pcccr.azurecr.io/public/planetary-computer/${{ matrix.IMAGE }}:latest
-        echo "GITHUB_REF ${GITHUB_REF}"
-        GITHUB_TAG=${GITHUB_REF/refs\/tags\//}
-        HASH_TAG=${GITHUB_REF#refs/tags}
-        echo "GITHUB_TAG ${GITHUB_TAG}"
-        echo "HASH_TAG ${HASH_TAG}"
-
-
-        if [ -n ${GITHUB_TAG} ]; then
-          tag="${tag},pcccr.azurecr.io/public/planetary-computer/${{ matrix.IMAGE }}:${GITHUB_TAG}"
-        fi;
-        echo "::set-output name=tag::${tag}"
-
-    - name: test
-      run: |
-        echo "${{ steps.tags.outputs.tag }}"
+        echo "${{ steps.environment.outputs.environment }}"
