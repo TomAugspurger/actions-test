@@ -26,7 +26,7 @@ jobs:
         else
           tag=staging
         fi
-        echo "tag: ${tag}
+        echo "tag: ${tag}"
         echo "::set-output name=environment::${tag}"
 
     - name: Set new variable value
