@@ -20,7 +20,7 @@ jobs:
       id: environment
       run: |
         echo ${{ github.event_name }}
-        if [[ ${{ github.event_name == "release" }} ]]; then
+        if [[ ${{ github.event_name == 'release' }} ]]; then
           tag=prod
         else
           tag=staging
