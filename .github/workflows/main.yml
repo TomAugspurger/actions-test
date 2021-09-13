@@ -3,8 +3,9 @@ on:
   push:
     branches:
       - main
-    tags:
-      - '*'
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
 
 jobs:
   build:
@@ -20,11 +21,12 @@ jobs:
       id: environment
       run: |
         echo ${{ github.event_name }}
-        if [[ ${{ github.event_name == 'release' }} ]]; then
+        if [ ${{ github.event_name == 'release' }} ]; then
           tag=prod
         else
           tag=staging
         fi
+        echo "tag: ${tag}
         echo "::set-output name=environment::${tag}"
 
     - name: Set new variable value
