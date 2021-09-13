@@ -26,7 +26,7 @@ jobs:
         fi
         echo "::set-output name=environment::${tag}"
 
-   - name: Set new variable value
+    - name: Set new variable value
       id: tags
       run: |
         echo "${{ steps.environment.outputs.environment }}"
